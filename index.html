@@ -623,7 +623,7 @@
         </div>
         <div class="field">
           <label for="email">Email</label>
-          <input type="email" id="email" name="email" placeholder="tucorreo@email.com" required>
+          <input type="email" id="email" name="_replyto" placeholder="tucorreo@email.com" required>
         </div>
         <div class="field">
           <label for="telefono">Teléfono / WhatsApp (opcional)</label>
@@ -632,22 +632,24 @@
         <div class="field">
           <label for="servicio">Tipo de servicio</label>
           <select id="servicio" name="servicio">
-            <option value="menu">Menú QR</option>
-            <option value="web">Página web</option>
-            <option value="otro">Otro</option>
+            <option value="Menú QR">Menú QR</option>
+            <option value="Página web">Página web</option>
+            <option value="Otro">Otro</option>
           </select>
         </div>
         <div class="field">
           <label for="mensaje">Mensaje</label>
           <textarea id="mensaje" name="mensaje" placeholder="Cuéntanos sobre tu negocio y qué necesitas..." required></textarea>
         </div>
-        <button type="submit" class="btn btn-accent" style="width:100%; justify-content:center;">Enviar mensaje</button>
-        <p id="formMsg">¡Gracias! Hemos recibido tu mensaje, te responderemos en menos de 24h.</p>
+        <button type="submit" class="btn btn-accent" style="width:100%; justify-content:center;">
+          <span style="display:inline-flex;align-items:center;gap:8px;">Enviar por WhatsApp</span>
+        </button>
+        <p id="formMsg">Abriendo WhatsApp con tu mensaje ya redactado…</p>
       </form>
 
       <div class="contact-info reveal">
         <h3>Contacto directo</h3>
-        <a class="contact-row" href="https://wa.me/34600000000" target="_blank" rel="noopener">
+        <a class="contact-row" href="https://wa.me/34684792506" target="_blank" rel="noopener">
           <div class="ico">📱</div>
           <div><strong>WhatsApp</strong><span>Escríbenos por WhatsApp</span></div>
         </a>
@@ -724,12 +726,28 @@
   }, {threshold:0.12});
   revealEls.forEach(el=> io.observe(el));
 
-  // Formulario de contacto (demo front-end, sin backend)
+  // Formulario de contacto → abre WhatsApp con el mensaje ya redactado
+  const WHATSAPP_NUMBER = '34684792506';
   const form = document.getElementById('contactForm');
   const msg = document.getElementById('formMsg');
   form.addEventListener('submit', function(e){
     e.preventDefault();
+    const nombre = document.getElementById('nombre').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const telefono = document.getElementById('telefono').value.trim();
+    const servicio = document.getElementById('servicio').value;
+    const mensaje = document.getElementById('mensaje').value.trim();
+
+    let texto = `Hola Pixsaric, soy ${nombre}.%0A`;
+    texto += `Servicio de interés: ${servicio}%0A`;
+    texto += `Email: ${email}%0A`;
+    if(telefono){ texto += `Teléfono: ${telefono}%0A`; }
+    texto += `Mensaje: ${mensaje}`;
+
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${texto}`;
+
     msg.classList.add('show');
+    window.open(url, '_blank');
     form.reset();
     setTimeout(()=> msg.classList.remove('show'), 6000);
   });
